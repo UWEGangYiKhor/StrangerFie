@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# StrangerFie
 
-## Getting Started
+This is a prototype built for Interaction Design Coursework of BSc IT at UWE, Bristol
 
-First, run the development server:
+## Environment Settings
+
+Node Version `v20.3.1`
+
+## ENV Variables
 
 ```bash
+RAPID_API_KEY="YOUR_RAPID_API_KEY"
+```
+
+Get your API Key on [RapidAPI.com](https://rapidapi.com/hub)
+
+## How to Setup/Run
+
+```bash
+npm install # Only run on first time setup
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Server Endpoints
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Upload Image - `http://localhost:3000/api/uploadFile`
 
-## Learn More
+#### Processes
 
-To learn more about Next.js, take a look at the following resources:
+- Save the photo uploaded
+- Remove background
+- Blur faces
+- Merge with other strangers (Blurred faces)
+- Return back merged photo
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### Request [POST]
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```ts
+body: {
+	image: "base64_image_with_encoding_data";
+}
+```
 
-## Deploy on Vercel
+#### Response
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```ts
+body: {
+	mergedImage: "base64_image_merged_with_strangers",
+	onlyCurrentImage: "base64_image_only_current_person",
+	id: "current_image_id"
+}
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+<hr/>
+
+### Complete Image - `http://localhost:3000/api/completeImage`
+
+#### Processes
+
+- Get the current person blurred face
+- Merge with old photo with strangers
+- Save as new base photo for further captures
+
+#### Request [POST]
+
+```ts
+body: {
+	id: "current_image_id";
+}
+```
+
+#### Response
+
+```ts
+body: {
+	image: "base64_image_with_blurred_faces",
+}
+```
+
+<hr/>
+
+### Publish Image - `http://localhost:3000/api/publishImage`
+
+#### Processes
+
+- Merge every previous person's face (Non-blurred)
+- Archive all the photos
+- Send back the merged photo
+- Prepare the server for new set of group photo
+
+#### Request [POST]
+
+```ts
+"NO BODY REQUIRED";
+```
+
+#### Response
+
+```ts
+body: {
+	image: "base64_image",
+}
+```
