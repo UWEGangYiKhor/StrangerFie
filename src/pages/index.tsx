@@ -8,6 +8,7 @@ import ProcessedImage from "@/components/processedImage";
 import QRCode from "@/components/qrCode";
 import WebCam from "@/components/webcam";
 import { uploadFileResponses } from "@/responses/uploadFileResponses";
+import Head from "next/head";
 
 export default function StrangerFie() {
 	const [imageData, setImageData] = useState<string>();
@@ -59,6 +60,9 @@ export default function StrangerFie() {
 
 	return (
 		<main>
+			<Head>
+				<title>StrangerFie</title>
+			</Head>
 			{isLoading ? <Loader /> : null}
 			{showQR ? (
 				<QRCode setShowQR={setShowQR} setShowConsentForm={setShowConsentForm} />
