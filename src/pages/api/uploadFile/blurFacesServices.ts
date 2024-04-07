@@ -11,7 +11,7 @@ export default async function blurFacesServices(
 
 	const response = await axios.post(BLUR_FACE_URL, data, {
 		headers: {
-			"X-RapidAPI-Key": process.env.RAPID_API_KEY || "",
+			"X-RapidAPI-Key": process.env.RAPID_API_KEY ?? "",
 			"X-RapidAPI-Host": BLUR_FACE_HOST,
 			...data.getHeaders,
 		},

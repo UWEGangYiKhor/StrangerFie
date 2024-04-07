@@ -5,7 +5,10 @@ type PropType = {
 	setShowQR: (value: boolean) => void;
 };
 
-export default function ProcessedImage({ imageData, setShowQR }: PropType) {
+export default function ProcessedImage({
+	imageData,
+	setShowQR,
+}: Readonly<PropType>) {
 	const [showCurrentOnly, setShowCurrentOnly] = useState(false);
 
 	return (
@@ -16,7 +19,7 @@ export default function ProcessedImage({ imageData, setShowQR }: PropType) {
 				src={
 					showCurrentOnly ? imageData?.onlyCurrentImage : imageData?.mergedImage
 				}
-				alt="Processed Image"
+				alt=""
 			/>
 			<div className="button_group">
 				<button

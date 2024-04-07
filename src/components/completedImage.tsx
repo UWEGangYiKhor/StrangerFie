@@ -1,6 +1,6 @@
-import { usePost } from "@/hooks/usePost";
+import { useGet } from "@/hooks/useGet";
 import { publishImageResponses } from "@/responses/publishImageResponses";
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 
 type PropType = {
 	image?: string;
@@ -16,8 +16,8 @@ export default function CompletedImage({
 	setIsLoading,
 	setIsPublished,
 	setCompletedImage,
-}: PropType) {
-	const postPublish = usePost<void, publishImageResponses>("/api/publishImage");
+}: Readonly<PropType>) {
+	const postPublish = useGet<publishImageResponses>("/api/publishImage");
 
 	const publishImage = useCallback(async () => {
 		setIsLoading(true);
@@ -32,7 +32,7 @@ export default function CompletedImage({
 	return (
 		<div id="image_container">
 			{/* eslint-disable-next-line @next/next/no-img-element */}
-			<img className="images" src={image} alt="Completed Image" />
+			<img className="images" src={image} alt="" />
 			{!isPublished ? (
 				<div className="button_group">
 					<button className="button blue_button" onClick={publishImage}>

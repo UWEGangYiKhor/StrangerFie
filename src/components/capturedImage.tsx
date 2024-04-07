@@ -17,7 +17,7 @@ export default function CapturedImage({
 	setImageData,
 	setIsProcessed,
 	setProcessedImage,
-}: PropType) {
+}: Readonly<PropType>) {
 	const postUpload = usePost<uploadFileDto, uploadFileResponses>(
 		"/api/uploadFile"
 	);
@@ -38,7 +38,7 @@ export default function CapturedImage({
 	return (
 		<div id="image_container">
 			{/* eslint-disable-next-line @next/next/no-img-element */}
-			<img className="images" src={imageData} alt="Captured Image" />
+			<img className="images" src={imageData} alt="" />
 			<div className="button_group">
 				<button className="button grey_button" onClick={() => setImageData("")}>
 					Retake

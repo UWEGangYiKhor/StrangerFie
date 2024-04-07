@@ -16,13 +16,13 @@ export default function ConsentForm({
 	id,
 	setCompleted,
 	setCompletedImage,
-}: PropType) {
+}: Readonly<PropType>) {
 	const postComplete = usePost<completeImageDto>("/api/completeImage");
 
 	const completeImage = useCallback(async () => {
 		setIsLoading(true);
 		const { data, status } = await postComplete({
-			id: id || "",
+			id: id ?? "",
 		});
 		setIsLoading(false);
 		if (status === 200) {

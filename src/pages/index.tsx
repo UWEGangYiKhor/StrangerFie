@@ -17,7 +17,7 @@ export default function StrangerFie() {
 	const [isProcessed, setIsProcessed] = useState(false);
 	const [showQR, setShowQR] = useState(false);
 	const [showConsentForm, setShowConsentForm] = useState(false);
-	const [isCompleted, setCompleted] = useState(false);
+	const [isCompleted, setIsCompleted] = useState(false);
 	const [completedImage, setCompletedImage] = useState<string>();
 	const [isPublished, setIsPublished] = useState(false);
 
@@ -71,7 +71,7 @@ export default function StrangerFie() {
 				<ConsentForm
 					setShowConsentForm={setShowConsentForm}
 					setIsLoading={setIsLoading}
-					setCompleted={setCompleted}
+					setCompleted={setIsCompleted}
 					setCompletedImage={setCompletedImage}
 					id={processedImage?.id}
 				/>

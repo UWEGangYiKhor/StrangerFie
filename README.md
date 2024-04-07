@@ -14,6 +14,12 @@ RAPID_API_KEY="YOUR_RAPID_API_KEY"
 
 Get your API Key on [RapidAPI.com](https://rapidapi.com/hub)
 
+## Subscribe to Hide Your Face API
+
+Register your account at RapidAPI and subscribe to the Hide Your Face API at [HideYourFace](https://rapidapi.com/inuinana/api/hide-your-face/).
+<br/>
+There should be a free subscription version with 100 requests/month limit.
+
 ## How to Setup/Run
 
 ```bash
@@ -23,7 +29,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-# Server Endpoints
+# Server Endpoints (For Development)
 
 ### Upload Image - `http://localhost:3000/api/uploadFile`
 
@@ -90,10 +96,10 @@ body: {
 - Send back the merged photo
 - Prepare the server for new set of group photo
 
-#### Request [POST]
+#### Request [GET]
 
 ```ts
-"NO BODY REQUIRED";
+"NO PARAMS REQUIRED";
 ```
 
 #### Response

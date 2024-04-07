@@ -6,7 +6,10 @@ type PropType = {
 	setShowConsentForm: (value: boolean) => void;
 };
 
-export default function QRCode({ setShowQR, setShowConsentForm }: PropType) {
+export default function QRCode({
+	setShowQR,
+	setShowConsentForm,
+}: Readonly<PropType>) {
 	return (
 		<div id="qr_code">
 			<Image

@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import publishImageServices from "./publishImageServices";
 
 async function publishImageHandler(req: NextApiRequest, res: NextApiResponse) {
-	if (req.method === "POST") {
+	if (req.method === "GET") {
 		try {
 			const { image } = await publishImageServices();
 			res.status(200).json({ image });

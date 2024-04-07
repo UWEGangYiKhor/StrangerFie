@@ -11,11 +11,11 @@ type PropType = {
 	setImageData: (value: string) => void;
 };
 
-export default function WebCam({ setImageData }: PropType) {
+export default function WebCam({ setImageData }: Readonly<PropType>) {
 	const webcamRef = useRef<Webcam>(null);
 
 	const capture = useCallback(async () => {
-		setImageData(webcamRef?.current?.getScreenshot() || "");
+		setImageData(webcamRef?.current?.getScreenshot() ?? "");
 	}, [webcamRef, setImageData]);
 
 	return (
