@@ -1,9 +1,6 @@
-export const BLURFACE_URL =
+export const BLUR_FACE_URL =
 	"https://face-and-plate-blurer.p.rapidapi.com/img-anonymization/v1/results";
-export const BLURFACE_HOST = "face-and-plate-blurer.p.rapidapi.com";
-
-export const BGREMOVE1_URL = "https://background-removal.p.rapidapi.com/remove";
-export const BGREMOVE1_HOST = "background-removal.p.rapidapi.com";
+export const BLUR_FACE_HOST = "face-and-plate-blurer.p.rapidapi.com";
 
 export const IMG_DIR = "img\\";
 export const CUR_IMG_DIR = `${IMG_DIR}current\\`;

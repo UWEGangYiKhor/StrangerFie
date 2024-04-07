@@ -3,22 +3,20 @@ import {
 	MERGED_TMP_PATH,
 	PERSON_BLUR_DIR,
 } from "@/utils/constants";
-import mergeImagesServices from "../uploadFile/mergeImagesServices";
 import fs from "fs";
+import mergeImages from "../../../utils/mergeImages";
+import { completeImageDto } from "@/dto/completeImageDto";
+import { completeImageResponses } from "@/responses/completeImageResponses";
 
-async function completeImageServices(body: {
-	id: string;
-}): Promise<{ image: string }> {
+async function completeImageServices(
+	body: completeImageDto
+): Promise<completeImageResponses> {
 	if (!body?.id) {
 		throw new Error();
 	}
 
 	const blurredPersonFilename = `${PERSON_BLUR_DIR}${body.id}.png`;
-	await mergeImagesServices(
-		MERGED_IMG_PATH,
-		[blurredPersonFilename],
-		MERGED_TMP_PATH
-	);
+	await mergeImages(MERGED_IMG_PATH, [blurredPersonFilename], MERGED_TMP_PATH);
 	fs.copyFileSync(MERGED_TMP_PATH, MERGED_IMG_PATH);
 
 	return {

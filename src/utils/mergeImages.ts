@@ -3,7 +3,7 @@ import fs from "fs";
 import { BACKGROUND_IMG_PATH } from "@/utils/constants";
 sharp.cache(false);
 
-export default async function mergeImagesServices(
+export default async function mergeImages(
 	backgroundFileName: string,
 	foregroundFileName: string[],
 	outputFileName: string

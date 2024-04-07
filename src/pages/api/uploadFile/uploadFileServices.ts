@@ -1,6 +1,6 @@
-import { imageDto } from "@/dto/imageDto";
+import { uploadFileDto } from "@/dto/uploadFileDto";
 import fs from "fs";
-import mergeImagesServices from "./mergeImagesServices";
+import mergeImages from "../../../utils/mergeImages";
 import localRemoveBgServices from "./localRemoveBgServices";
 import blurFacesServices from "./blurFacesServices";
 import {
@@ -14,10 +14,11 @@ import {
 	PERSON_DIR,
 } from "@/utils/constants";
 import mkdirIfNotExists from "@/utils/mkdirIfNotExists";
+import { uploadFileResponses } from "@/responses/uploadFileResponses";
 
 export default async function uploadFileServices(
-	body: imageDto
-): Promise<{ mergedImage: string; onlyCurrentImage: string; id: string }> {
+	body: uploadFileDto
+): Promise<uploadFileResponses> {
 	if (!body?.image) {
 		throw new Error();
 	}
@@ -45,12 +46,8 @@ export default async function uploadFileServices(
 	const blurredPersonImageBuffer = await localRemoveBgServices(blurredFilename);
 	fs.writeFileSync(blurredPersonFilename, blurredPersonImageBuffer);
 
-	await mergeImagesServices(MERGED_IMG_PATH, [personFilename], MERGED_TMP_PATH);
-	await mergeImagesServices(
-		BACKGROUND_IMG_PATH,
-		[personFilename],
-		ONLY_CURRENT_PATH
-	);
+	await mergeImages(MERGED_IMG_PATH, [personFilename], MERGED_TMP_PATH);
+	await mergeImages(BACKGROUND_IMG_PATH, [personFilename], ONLY_CURRENT_PATH);
 
 	return {
 		mergedImage:

@@ -1,152 +1,79 @@
-import WebCam from "@/components/webcam";
-import { imageDto } from "@/dto/imageDto";
-import axios, { AxiosResponse } from "axios";
+import "@/styles/styles.css";
 import React, { useCallback, useState } from "react";
+import CapturedImage from "@/components/capturedImage";
+import CompletedImage from "@/components/completedImage";
+import ConsentForm from "@/components/consentForm";
+import Loader from "@/components/loader";
+import ProcessedImage from "@/components/processedImage";
+import QRCode from "@/components/qrCode";
+import WebCam from "@/components/webcam";
+import { uploadFileResponses } from "@/responses/uploadFileResponses";
 
 export default function StrangerFie() {
 	const [imageData, setImageData] = useState<string>();
 	const [isLoading, setIsLoading] = useState(false);
-	const [processedImage, setProcessedImage] = useState<{
-		mergedImage: string;
-		onlyCurrentImage: string;
-		id: string;
-	}>();
+	const [processedImage, setProcessedImage] = useState<uploadFileResponses>();
 	const [isProcessed, setIsProcessed] = useState(false);
-	const [showCurrentOnly, setShowCurrentOnly] = useState(false);
 	const [showQR, setShowQR] = useState(false);
 	const [showConsentForm, setShowConsentForm] = useState(false);
 	const [isCompleted, setCompleted] = useState(false);
 	const [completedImage, setCompletedImage] = useState<string>();
 	const [isPublished, setIsPublished] = useState(false);
 
-	const confirmImage = useCallback(
-		async (imageData: string) => {
-			setIsLoading(true);
-			const { data, status } = await axios.post<
-				any,
-				AxiosResponse<
-					{
-						mergedImage: string;
-						onlyCurrentImage: string;
-						id: string;
-					},
-					any
-				>,
-				imageDto
-			>("/api/uploadFile", { image: imageData });
-			setIsLoading(false);
-			if (status === 200) {
-				setIsProcessed(true);
-				setProcessedImage(data);
+	const showElement = useCallback(
+		(isCompleted: boolean, isProcessed: boolean, isPublished: boolean) => {
+			if (isCompleted) {
+				return (
+					<CompletedImage
+						image={completedImage}
+						isPublished={isPublished}
+						setIsLoading={setIsLoading}
+						setIsPublished={setIsPublished}
+						setCompletedImage={setCompletedImage}
+					/>
+				);
 			}
+
+			if (isProcessed) {
+				return (
+					<ProcessedImage imageData={processedImage} setShowQR={setShowQR} />
+				);
+			}
+
+			if (imageData) {
+				return (
+					<CapturedImage
+						imageData={imageData}
+						setIsLoading={setIsLoading}
+						setImageData={setImageData}
+						setIsProcessed={setIsProcessed}
+						setProcessedImage={setProcessedImage}
+					/>
+				);
+			}
+
+			return <WebCam setImageData={setImageData} />;
 		},
-		[setIsLoading, setIsProcessed, setProcessedImage]
+		[completedImage, imageData, processedImage]
 	);
-
-	const completeImage = useCallback(async () => {
-		setIsLoading(true);
-		const { data, status } = await axios.post<
-			any,
-			AxiosResponse<{ image: string }, any>,
-			{ id: string }
-		>("/api/completeImage", { id: processedImage?.id || "" });
-		setIsLoading(false);
-		if (status === 200) {
-			setCompleted(true);
-			setCompletedImage(data.image);
-		}
-	}, [setIsLoading, processedImage?.id, setCompleted, setCompletedImage]);
-
-	const publishImage = useCallback(async () => {
-		setIsLoading(true);
-		const { data, status } = await axios.post<
-			any,
-			AxiosResponse<{ image: string }, any>,
-			null
-		>("/api/publishImage");
-		setIsLoading(false);
-		if (status === 200) {
-			setIsPublished(true);
-			setCompletedImage(data.image);
-		}
-	}, [setIsLoading, setIsPublished, setCompletedImage]);
 
 	return (
 		<main>
-			{isCompleted ? (
-				<>
-					{/* eslint-disable-next-line @next/next/no-img-element */}
-					<img src={completedImage} alt="Completed Image" />
-					{isPublished ? null : <button onClick={publishImage}>Publish</button>}
-				</>
-			) : isProcessed ? (
-				showCurrentOnly ? (
-					<>
-						{/* eslint-disable-next-line @next/next/no-img-element */}
-						<img src={processedImage?.onlyCurrentImage} alt="Processed Image" />
-						<button onClick={() => setShowCurrentOnly(false)}>
-							Show Strangers
-						</button>
-						<button onClick={() => setShowQR(true)}>Download</button>
-					</>
-				) : (
-					<>
-						{/* eslint-disable-next-line @next/next/no-img-element */}
-						<img src={processedImage?.mergedImage} alt="Processed Image" />
-						<button onClick={() => setShowCurrentOnly(true)}>
-							Hide Strangers
-						</button>
-						<button onClick={() => setShowQR(true)}>Download</button>
-					</>
-				)
-			) : imageData ? (
-				<>
-					{/* eslint-disable-next-line @next/next/no-img-element */}
-					<img src={imageData} alt="Captured Image" />
-					<button onClick={() => confirmImage(imageData)}>Confirm</button>
-					<button onClick={() => setImageData("")}>Retake</button>
-
-					{/* eslint-disable-next-line @next/next/no-img-element */}
-					{isLoading ? <img src="/loader.gif" alt="Loading" /> : ""}
-				</>
-			) : (
-				<WebCam setImageData={setImageData} />
-			)}
-
+			{isLoading ? <Loader /> : null}
 			{showQR ? (
-				<div>
-					{/* eslint-disable-next-line @next/next/no-img-element */}
-					<img src="/example_qr_code.png" alt="Image Download QR Code" />
-					<button
-						onClick={() => {
-							setShowQR(false);
-							setShowConsentForm(true);
-						}}
-					>
-						Done
-					</button>
-				</div>
+				<QRCode setShowQR={setShowQR} setShowConsentForm={setShowConsentForm} />
+			) : null}
+			{showConsentForm ? (
+				<ConsentForm
+					setShowConsentForm={setShowConsentForm}
+					setIsLoading={setIsLoading}
+					setCompleted={setCompleted}
+					setCompletedImage={setCompletedImage}
+					id={processedImage?.id}
+				/>
 			) : null}
 
-			{showConsentForm ? (
-				<div>
-					<h2>Consent Form</h2>
-					<p>
-						Do you allow us to leave your photo on the screen until the group
-						photo is completed, and publish it onto our Facebook page? We will
-						blur out your face until it is published.
-					</p>
-					<button onClick={() => setShowConsentForm(false)}>No</button>
-					<button
-						onClick={() => {
-							setShowConsentForm(false);
-							completeImage();
-						}}
-					>
-						Yes
-					</button>
-				</div>
-			) : null}
+			{showElement(isCompleted, isProcessed, isPublished)}
 		</main>
 	);
 }

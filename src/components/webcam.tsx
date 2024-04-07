@@ -19,17 +19,26 @@ export default function WebCam({ setImageData }: PropType) {
 	}, [webcamRef, setImageData]);
 
 	return (
-		<>
+		<div id="image_container">
 			<Webcam
+				className="images"
 				audio={false}
-				width={1280}
-				height={720}
+				width={1920}
+				height={1080}
 				ref={webcamRef}
 				screenshotFormat="image/jpeg"
 				videoConstraints={videoConstraints}
 				mirrored={true}
 			/>
-			<button onClick={capture}>Capture Photo</button>
-		</>
+			<div className="button_group">
+				<button
+					id="capture_button"
+					className="button green_button"
+					onClick={capture}
+				>
+					Capture Photo
+				</button>
+			</div>
+		</div>
 	);
 }

@@ -1,4 +1,4 @@
-import { BLURFACE_HOST, BLURFACE_URL } from "@/utils/constants";
+import { BLUR_FACE_HOST, BLUR_FACE_URL } from "@/utils/constants";
 import axios from "axios";
 import fs from "fs";
 import FormData from "form-data";
@@ -9,10 +9,10 @@ export default async function blurFacesServices(
 	const data = new FormData();
 	data.append("image", fs.createReadStream(fileName));
 
-	const response = await axios.post(BLURFACE_URL, data, {
+	const response = await axios.post(BLUR_FACE_URL, data, {
 		headers: {
 			"X-RapidAPI-Key": process.env.RAPID_API_KEY || "",
-			"X-RapidAPI-Host": BLURFACE_HOST,
+			"X-RapidAPI-Host": BLUR_FACE_HOST,
 			...data.getHeaders,
 		},
 	});
