@@ -24,7 +24,11 @@ There should be a free subscription version with 100 requests/month limit.
 
 ```bash
 npm install # Only run on first time setup
-npm run dev
+npm run dev # For development server
+
+# For actual deployment
+npm run build
+npm run start
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

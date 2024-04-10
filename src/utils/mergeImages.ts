@@ -1,7 +1,6 @@
 import sharp from "sharp";
 import fs from "fs";
 import { BACKGROUND_IMG_PATH } from "@/utils/constants";
-sharp.cache(false);
 
 export default async function mergeImages(
 	backgroundFileName: string,
@@ -9,6 +8,7 @@ export default async function mergeImages(
 	outputFileName: string
 ): Promise<void> {
 	try {
+		sharp.cache(false);
 		const inputFiles: { input: string }[] = [];
 		foregroundFileName.forEach((value) => {
 			inputFiles.push({ input: value });
