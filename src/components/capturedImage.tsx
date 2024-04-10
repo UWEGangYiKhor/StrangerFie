@@ -1,7 +1,8 @@
 import { uploadFileDto } from "@/dto/uploadFileDto";
 import { usePost } from "@/hooks/usePost";
 import { uploadFileResponses } from "@/responses/uploadFileResponses";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
+import BackgroundCompleteDialog from "./backgroundComplete";
 
 type PropType = {
 	imageData: string;
@@ -18,9 +19,12 @@ export default function CapturedImage({
 	setIsProcessed,
 	setProcessedImage,
 }: Readonly<PropType>) {
+	const [showDialog, setShowDialog] = useState(false);
+	const [uploadedBackground, setUploadedBackground] = useState(false);
 	const postUpload = usePost<uploadFileDto, uploadFileResponses>(
 		"/api/uploadFile"
 	);
+	const postBackground = usePost<uploadFileDto, void>("/api/uploadBackground");
 
 	const confirmImage = useCallback(
 		async (imageData: string) => {
@@ -35,21 +39,52 @@ export default function CapturedImage({
 		[postUpload, setIsLoading, setIsProcessed, setProcessedImage]
 	);
 
+	const uploadBackground = useCallback(
+		async (imageData: string) => {
+			setIsLoading(true);
+			const { status } = await postBackground({ image: imageData });
+			setIsLoading(false);
+			if (status === 200) {
+				setShowDialog(true);
+				setUploadedBackground(true);
+			}
+		},
+		[postBackground, setIsLoading]
+	);
+
 	return (
-		<div id="image_container">
-			{/* eslint-disable-next-line @next/next/no-img-element */}
-			<img className="images" src={imageData} alt="" />
-			<div className="button_group">
-				<button className="button grey_button" onClick={() => setImageData("")}>
-					Retake
-				</button>
-				<button
-					className="button green_button"
-					onClick={() => confirmImage(imageData)}
-				>
-					Confirm
-				</button>
+		<>
+			{showDialog ? (
+				<BackgroundCompleteDialog setShowDialog={setShowDialog} />
+			) : null}
+
+			<div id="image_container">
+				{/* eslint-disable-next-line @next/next/no-img-element */}
+				<img className="images" src={imageData} alt="" />
+
+				{!uploadedBackground ? (
+					<div className="button_group">
+						<button
+							className="button blue_button"
+							onClick={() => uploadBackground(imageData)}
+						>
+							Save as Background
+						</button>
+						<button
+							className="button grey_button"
+							onClick={() => setImageData("")}
+						>
+							Retake
+						</button>
+						<button
+							className="button green_button"
+							onClick={() => confirmImage(imageData)}
+						>
+							Confirm
+						</button>
+					</div>
+				) : null}
 			</div>
-		</div>
+		</>
 	);
 }
