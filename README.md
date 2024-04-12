@@ -15,6 +15,7 @@ This is a prototype built for Interaction Design Coursework of BSc IT at UWE, Br
 NODE_ENV="production" # Set as development for dev server
 RAPID_API_KEY="YOUR_RAPID_API_KEY" # Get your API key on RapidAPI.com
 POSTGRES_PRISMA_URL="YOUR_POSTGRES_DB_URL"
+PLATFORM="server" # For vercel server (tmp file storage purpose)
 ```
 
 Get your API Key on [RapidAPI.com](https://rapidapi.com/hub)
