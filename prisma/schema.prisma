@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
+}
+
+model images {
+  id                        Int            @id(map: "original_images_pkey") @default(autoincrement())
+  image_blob                Bytes
+  blurred_image_blob        Bytes
+  person_image_blob         Bytes
+  blurred_person_image_blob Bytes
+  archived                  Boolean        @default(false)
+  publish_id                Int?
+  publish_image             publish_image? @relation(fields: [publish_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "publish_id_key")
+}
+
+model publish_image {
+  id               Int       @id @default(autoincrement()) @db.SmallInt
+  image            Bytes
+  background_image Bytes
+  publish_date     DateTime? @db.Timestamptz(6)
+  archived         Boolean   @default(false)
+  images           images[]
+}

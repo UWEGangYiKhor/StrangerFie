@@ -1,40 +1,53 @@
-import fs from "fs";
 import mergeImages from "../../../utils/mergeImages";
-import mkdirIfNotExists from "@/utils/mkdirIfNotExists";
-import {
-	BACKGROUND_IMG_PATH,
-	COMPLETED_PATH,
-	CUR_IMG_DIR,
-	IMG_DIR,
-	MERGED_IMG_PATH,
-	MERGED_TMP_PATH,
-	ONLY_CURRENT_PATH,
-	PERSON_DIR,
-} from "@/utils/constants";
 import { publishImageResponses } from "@/responses/publishImageResponses";
+import prisma from "@/utils/prismaClient";
 
 export default async function publishImageServices(): Promise<publishImageResponses> {
-	const allPersonFiles = fs
-		.readdirSync(PERSON_DIR)
-		.filter((value) => value.endsWith(".png"))
-		.map((value) => PERSON_DIR + value);
-
-	await mergeImages(BACKGROUND_IMG_PATH, allPersonFiles, COMPLETED_PATH);
-
-	const imageData = fs.readFileSync(COMPLETED_PATH).toString("base64");
-	const newDirName = Date.now().toString();
-	const newDir = `${IMG_DIR}${newDirName}\\`;
-	mkdirIfNotExists(newDir);
-
-	fs.readdirSync(CUR_IMG_DIR).forEach((value) => {
-		fs.renameSync(CUR_IMG_DIR + value, `${newDir}${value}`);
+	const allImages = await prisma.images.findMany({
+		select: {
+			person_image_blob: true,
+		},
+		where: {
+			archived: false,
+		},
+	});
+	const { id, background_image } = await prisma.publish_image.findFirstOrThrow({
+		select: {
+			id: true,
+			background_image: true,
+		},
+		where: {
+			archived: false,
+		},
 	});
 
-	[MERGED_IMG_PATH, MERGED_TMP_PATH, ONLY_CURRENT_PATH].forEach((value) => {
-		fs.renameSync(value, value.replace("\\", `\\${newDirName}\\`));
+	const mergedImage = await mergeImages(
+		background_image,
+		allImages.map((value) => value.person_image_blob)
+	);
+
+	await prisma.images.updateMany({
+		data: {
+			archived: true,
+			publish_id: id,
+		},
+		where: {
+			archived: false,
+		},
+	});
+
+	await prisma.publish_image.update({
+		data: {
+			image: mergedImage,
+			publish_date: new Date(),
+			archived: true,
+		},
+		where: {
+			id,
+		},
 	});
 
 	return {
-		image: "data:image/jpeg;base64," + imageData,
+		image: "data:image/jpeg;base64," + mergedImage.toString("base64"),
 	};
 }

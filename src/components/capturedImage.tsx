@@ -10,6 +10,7 @@ type PropType = {
 	setImageData: (value: string) => void;
 	setIsProcessed: (value: boolean) => void;
 	setProcessedImage: (value: uploadFileResponses) => void;
+	isSetup: boolean;
 };
 
 export default function CapturedImage({
@@ -18,6 +19,7 @@ export default function CapturedImage({
 	setImageData,
 	setIsProcessed,
 	setProcessedImage,
+	isSetup,
 }: Readonly<PropType>) {
 	const [showDialog, setShowDialog] = useState(false);
 	const [uploadedBackground, setUploadedBackground] = useState(false);
@@ -65,23 +67,26 @@ export default function CapturedImage({
 				{!uploadedBackground ? (
 					<div className="button_group">
 						<button
-							className="button blue_button"
-							onClick={() => uploadBackground(imageData)}
-						>
-							Save as Background
-						</button>
-						<button
 							className="button grey_button"
 							onClick={() => setImageData("")}
 						>
 							Retake
 						</button>
 						<button
-							className="button green_button"
-							onClick={() => confirmImage(imageData)}
+							className="button blue_button"
+							onClick={() => uploadBackground(imageData)}
 						>
-							Confirm
+							Save as Background
 						</button>
+
+						{isSetup ? (
+							<button
+								className="button green_button"
+								onClick={() => confirmImage(imageData)}
+							>
+								Confirm
+							</button>
+						) : null}
 					</div>
 				) : null}
 			</div>

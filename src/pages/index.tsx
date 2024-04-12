@@ -1,5 +1,5 @@
 import "@/styles/styles.css";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import CapturedImage from "@/components/capturedImage";
 import CompletedImage from "@/components/completedImage";
 import ConsentForm from "@/components/consentForm";
@@ -9,6 +9,9 @@ import QRCode from "@/components/qrCode";
 import WebCam from "@/components/webcam";
 import { uploadFileResponses } from "@/responses/uploadFileResponses";
 import Head from "next/head";
+import { useGet } from "@/hooks/useGet";
+import { isSetupResponses } from "@/responses/isSetupResponses";
+import { hasPublishedImageResponses } from "@/responses/hasPublishedImageResponses";
 
 export default function StrangerFie() {
 	const [imageData, setImageData] = useState<string>();
@@ -20,6 +23,25 @@ export default function StrangerFie() {
 	const [isCompleted, setIsCompleted] = useState(false);
 	const [completedImage, setCompletedImage] = useState<string>();
 	const [isPublished, setIsPublished] = useState(false);
+	const [isSetup, setIsSetup] = useState(false);
+	const [hasPublished, setHasPublished] = useState(false);
+	const getIsSetupStatus = useGet<isSetupResponses>("/api/isSetup");
+	const getHasPublishedImage = useGet<hasPublishedImageResponses>(
+		"/api/hasPublishedImage"
+	);
+
+	useEffect(() => {
+		setIsLoading(true);
+		getIsSetupStatus().then(({ data }) => {
+			setIsSetup(data.status);
+			setIsLoading(false);
+		});
+		getHasPublishedImage().then(({ data }) => {
+			setHasPublished(data.status);
+			setIsLoading(false);
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const showElement = useCallback(
 		(isCompleted: boolean, isProcessed: boolean, isPublished: boolean) => {
@@ -49,13 +71,23 @@ export default function StrangerFie() {
 						setImageData={setImageData}
 						setIsProcessed={setIsProcessed}
 						setProcessedImage={setProcessedImage}
+						isSetup={isSetup}
 					/>
 				);
 			}
 
-			return <WebCam setImageData={setImageData} />;
+			return (
+				<WebCam
+					setImageData={setImageData}
+					isSetup={isSetup}
+					hasPublished={hasPublished}
+					setCompletedImage={setCompletedImage}
+					setIsPublished={setIsPublished}
+					setIsCompleted={setIsCompleted}
+				/>
+			);
 		},
-		[completedImage, imageData, processedImage]
+		[imageData, isSetup, hasPublished, completedImage, processedImage]
 	);
 
 	return (

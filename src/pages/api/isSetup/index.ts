@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import publishImageServices from "./publishImageServices";
+import isSetupServices from "./isSetupServices";
 
 async function publishImageHandler(req: NextApiRequest, res: NextApiResponse) {
 	if (req.method === "GET") {
 		try {
-			const { image } = await publishImageServices();
-			res.status(200).json({ image });
+			const { status } = await isSetupServices();
+			res.status(200).json({ status });
 		} catch (err) {
 			if (process.env.NODE_ENV === "development") {
 				console.error(err);

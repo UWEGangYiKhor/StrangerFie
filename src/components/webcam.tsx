@@ -1,3 +1,5 @@
+import { useGet } from "@/hooks/useGet";
+import { publishImageResponses } from "@/responses/publishImageResponses";
 import React, { useRef, useCallback } from "react";
 import Webcam from "react-webcam";
 
@@ -9,10 +11,32 @@ const videoConstraints = {
 
 type PropType = {
 	setImageData: (value: string) => void;
+	isSetup: boolean;
+	hasPublished: boolean;
+	setCompletedImage: (value: string) => void;
+	setIsPublished: (value: boolean) => void;
+	setIsCompleted: (value: boolean) => void;
 };
 
-export default function WebCam({ setImageData }: Readonly<PropType>) {
+export default function WebCam({
+	setImageData,
+	isSetup,
+	hasPublished,
+	setCompletedImage,
+	setIsPublished,
+	setIsCompleted,
+}: Readonly<PropType>) {
 	const webcamRef = useRef<Webcam>(null);
+	const getIsSetupStatus = useGet<publishImageResponses>(
+		"/api/getLatestPublishedImage"
+	);
+
+	const getLatestPublishImage = useCallback(async () => {
+		const { data } = await getIsSetupStatus();
+		setCompletedImage(data.image);
+		setIsPublished(true);
+		setIsCompleted(true);
+	}, [getIsSetupStatus, setCompletedImage, setIsCompleted, setIsPublished]);
 
 	const capture = useCallback(async () => {
 		setImageData(webcamRef?.current?.getScreenshot() ?? "");
@@ -31,12 +55,17 @@ export default function WebCam({ setImageData }: Readonly<PropType>) {
 				mirrored={true}
 			/>
 			<div className="button_group">
-				<button
-					id="capture_button"
-					className="button green_button"
-					onClick={capture}
-				>
-					Capture Photo
+				{hasPublished ? (
+					<button
+						className="button blue_button"
+						onClick={getLatestPublishImage}
+					>
+						View Last Published Image
+					</button>
+				) : null}
+
+				<button className="button green_button" onClick={capture}>
+					{isSetup ? "Capture Photo" : "Capture Background"}
 				</button>
 			</div>
 		</div>

@@ -12,10 +12,10 @@ async function uploadFileHandler(req: NextApiRequest, res: NextApiResponse) {
 			if (process.env.NODE_ENV === "development") {
 				console.error(err);
 			}
-			res.status(400);
+			res.status(400).end();
 		}
 	} else {
-		res.status(400);
+		res.status(400).end();
 	}
 }
 

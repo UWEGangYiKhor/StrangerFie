@@ -1,10 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import publishImageServices from "./publishImageServices";
+import getLatestPublishedImageServices from "./getLatestPublishedImageServices";
 
-async function publishImageHandler(req: NextApiRequest, res: NextApiResponse) {
+async function getLatestPublishedImageHandler(
+	req: NextApiRequest,
+	res: NextApiResponse
+) {
 	if (req.method === "GET") {
 		try {
-			const { image } = await publishImageServices();
+			const { image } = await getLatestPublishedImageServices();
 			res.status(200).json({ image });
 		} catch (err) {
 			if (process.env.NODE_ENV === "development") {
@@ -17,4 +20,4 @@ async function publishImageHandler(req: NextApiRequest, res: NextApiResponse) {
 	}
 }
 
-export default publishImageHandler;
+export default getLatestPublishedImageHandler;

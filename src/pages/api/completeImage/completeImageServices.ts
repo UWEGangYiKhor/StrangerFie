@@ -1,12 +1,7 @@
-import {
-	MERGED_IMG_PATH,
-	MERGED_TMP_PATH,
-	PERSON_BLUR_DIR,
-} from "@/utils/constants";
-import fs from "fs";
 import mergeImages from "../../../utils/mergeImages";
 import { completeImageDto } from "@/dto/completeImageDto";
 import { completeImageResponses } from "@/responses/completeImageResponses";
+import prisma from "@/utils/prismaClient";
 
 async function completeImageServices(
 	body: completeImageDto
@@ -15,14 +10,39 @@ async function completeImageServices(
 		throw new Error();
 	}
 
-	const blurredPersonFilename = `${PERSON_BLUR_DIR}${body.id}.png`;
-	await mergeImages(MERGED_IMG_PATH, [blurredPersonFilename], MERGED_TMP_PATH);
-	fs.copyFileSync(MERGED_TMP_PATH, MERGED_IMG_PATH);
+	const { blurred_person_image_blob: curPersonImage } =
+		await prisma.images.findFirstOrThrow({
+			select: {
+				blurred_person_image_blob: true,
+			},
+			where: {
+				id: parseInt(body.id),
+			},
+		});
+
+	const { id, image } = await prisma.publish_image.findFirstOrThrow({
+		select: {
+			id: true,
+			image: true,
+		},
+		where: {
+			archived: false,
+		},
+	});
+
+	const resultImage = await mergeImages(image, [curPersonImage]);
+
+	await prisma.publish_image.update({
+		data: {
+			image: resultImage,
+		},
+		where: {
+			id,
+		},
+	});
 
 	return {
-		image:
-			"data:image/jpeg;base64," +
-			fs.readFileSync(MERGED_IMG_PATH).toString("base64"),
+		image: "data:image/jpeg;base64," + resultImage.toString("base64"),
 	};
 }
 
