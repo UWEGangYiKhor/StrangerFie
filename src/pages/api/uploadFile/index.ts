@@ -9,10 +9,8 @@ async function uploadFileHandler(req: NextApiRequest, res: NextApiResponse) {
 			);
 			res.status(200).json({ mergedImage, onlyCurrentImage, id });
 		} catch (err) {
-			if (process.env.NODE_ENV === "development") {
-				console.error(err);
-			}
-			res.status(400).end();
+			console.error(err);
+			res.status(500).end();
 		}
 	} else {
 		res.status(400).end();
