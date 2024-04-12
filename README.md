@@ -12,7 +12,7 @@ This is a prototype built for Interaction Design Coursework of BSc IT at UWE, Br
 ## ENV Variables
 
 ```bash
-NODE_ENV="deployment" # Set as development for dev server
+NODE_ENV="production" # Set as development for dev server
 RAPID_API_KEY="YOUR_RAPID_API_KEY" # Get your API key on RapidAPI.com
 POSTGRES_PRISMA_URL="YOUR_POSTGRES_DB_URL"
 ```
