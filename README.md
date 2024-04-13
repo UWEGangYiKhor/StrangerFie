@@ -15,7 +15,12 @@ This is a prototype built for Interaction Design Coursework of BSc IT at UWE, Br
 NODE_ENV="production" # Set as development for dev server
 RAPID_API_KEY="YOUR_RAPID_API_KEY" # Get your API key on RapidAPI.com
 POSTGRES_PRISMA_URL="YOUR_POSTGRES_DB_URL"
-PLATFORM="server" # For vercel server (tmp file storage purpose)
+
+# Only if you are running in docker (Must use same username, password, port and db as URL above)
+POSTGRES_DB="strangerfie"
+POSTGRES_USER="USER"
+POSTGRES_PASSWORD="PASSWORD"
+POSTGRES_PORT="5431"
 ```
 
 Get your API Key on [RapidAPI.com](https://rapidapi.com/hub)
@@ -40,6 +45,9 @@ npm run dev
 # For actual deployment server
 npm run build
 npm run start
+
+# For docker (Can pack with local database)
+docker compose up
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

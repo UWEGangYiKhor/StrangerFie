@@ -1,0 +1,12 @@
+.git
+.next
+backup
+img
+node_modules
+.dockerignore
+.env
+.gitignore
+buildDocker.js
+Dockerfile
+README.md
+tmp_img.jpg

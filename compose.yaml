@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  app:
+    build: .
+    container_name: strangerfie
+    ports:
+      - 3000:3000
+    env_file: .env
+    environment:
+      - RAPID_API_KEY=$RAPID_API_KEY
+      - POSTGRES_PRISMA_URL=$POSTGRES_PRISMA_URL
+    command: "node server.js HOSTNAME=0.0.0.0"
+    extra_hosts:
+      - "localhost:host-gateway"
+    depends_on:
+      - db
+  db:
+    image: postgres:15-alpine
+    container_name: strangerfie_db
+    env_file: .env
+    environment:
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DB
+    ports:
+      - $POSTGRES_PORT:5432
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: postgres
