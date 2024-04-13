@@ -13,35 +13,20 @@ export default async function uploadFileServices(
 	}
 
 	const imageBuffer = Buffer.from(body.image.split(",")[1], "base64");
+	const blurredImageBuffer = await blurFacesServices(imageBuffer);
 	const personImageBuffer = await localRemoveBgServices(imageBuffer);
+	const blurredPersonImageBuffer = await localRemoveBgServices(
+		blurredImageBuffer
+	);
 
 	const { id } = await prisma.images.create({
 		data: {
 			image_blob: imageBuffer,
-			blurred_image_blob: imageBuffer,
+			blurred_image_blob: blurredImageBuffer,
 			person_image_blob: personImageBuffer,
-			blurred_person_image_blob: imageBuffer,
+			blurred_person_image_blob: blurredPersonImageBuffer,
 			archived: false,
 		},
-	});
-
-	blurFacesServices(imageBuffer).then(async (blurredImageBuffer) => {
-		if (process.env.NODE_ENV === "development") {
-			console.log("Blurred Face Received!");
-		}
-		const blurredPersonImageBuffer = await localRemoveBgServices(
-			blurredImageBuffer
-		);
-
-		await prisma.images.update({
-			data: {
-				blurred_image_blob: blurredImageBuffer,
-				blurred_person_image_blob: blurredPersonImageBuffer,
-			},
-			where: {
-				id,
-			},
-		});
 	});
 
 	const result = await prisma.publish_image.findFirstOrThrow({

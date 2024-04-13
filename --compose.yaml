@@ -14,6 +14,13 @@ services:
       - "localhost:host-gateway"
     depends_on:
       - db
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
   db:
     image: postgres:15-alpine
     container_name: strangerfie_db

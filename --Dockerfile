@@ -1,0 +1,49 @@
+FROM node:20 AS base
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+# RUN apk add --no-cache libc6-compat
+# RUN apk add --no-cache gcc
+# RUN apk add --no-cache g++
+# RUN apk add --no-cache musl-dev
+# RUN apk add --no-cache build-base bash
+# RUN apk add --no-cache libc6-compat gcompat libstdc++ cmake g++ gcc make
+# shared library ld-linux-x86-64.so.2:
+# RUN apk add --no-cache gcompat cmake
+
+# RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
+# RUN wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.34-r0/glibc-2.34-r0.apk
+# RUN apk add --force-overwrite --no-cache glibc-2.34-r0.apk
+
+# RUN wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.34-r0/glibc-bin-2.34-r0.apk
+# RUN apk add --force-overwrite --no-cache glibc-bin-2.34-r0.apk
+
+# RUN wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.34-r0/glibc-dev-2.34-r0.apk
+# RUN apk add --force-overwrite --no-cache glibc-dev-2.34-r0.apk
+
+ARG RAPID_API_KEY
+ARG DB_URL
+
+FROM base AS builder
+ENV NEXT_TELEMETRY_DISABLED 1
+RUN mkdir -p /app
+COPY package*.json /app/
+ADD . /app/
+WORKDIR /app
+RUN npm install
+RUN npm install --os=linux --libc=gnu --cpu=x64 sharp
+RUN npm install @next/swc-linux-x64-gnu
+RUN npm run build
+RUN npm prune --omit=dev
+
+FROM base AS production
+ENV NODE_ENV=production
+ENV RAPID_API_KEY=$RAPID_API_KEY
+ENV POSTGRES_PRISMA_URL=$DB_URL
+RUN mkdir -p /app
+WORKDIR /app
+COPY --from=builder /app/public ./public
+RUN mkdir .next
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/node_modules ./node_modules
+EXPOSE 3000
+CMD HOSTNAME="0.0.0.0" node server.js

@@ -1,6 +1,6 @@
 # StrangerFie
 
-This prototype is built for a concept of group photo-taking with strangers. Anyone is free to stop by and take a photo. After the photo is completed, it can be saved for other purposes <i>(E.g. publish on social media platforms).</i>
+This prototype is built for a concept of group photo-taking with strangers. Anyone is free to stop by and take a photo. After the photo is completed, it can be saved for other purposes _(E.g. publish on social media platforms)._
 
 This is a prototype built for Interaction Design Coursework of BSc IT at UWE, Bristol
 
@@ -15,12 +15,6 @@ This is a prototype built for Interaction Design Coursework of BSc IT at UWE, Br
 NODE_ENV="production" # Set as development for dev server
 RAPID_API_KEY="YOUR_RAPID_API_KEY" # Get your API key on RapidAPI.com
 POSTGRES_PRISMA_URL="YOUR_POSTGRES_DB_URL"
-
-# Only if you are running in docker (Must use same username, password, port and db as URL above)
-POSTGRES_DB="strangerfie"
-POSTGRES_USER="USER"
-POSTGRES_PASSWORD="PASSWORD"
-POSTGRES_PORT="5431"
 ```
 
 Get your API Key on [RapidAPI.com](https://rapidapi.com/hub)
@@ -45,9 +39,6 @@ npm run dev
 # For actual deployment server
 npm run build
 npm run start
-
-# For docker (Can pack with local database)
-docker compose up
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -55,6 +46,30 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 <br/>
 
 # Server Endpoints (For Development Purposes)
+
+### Upload Image - `http://localhost:3000/api/uploadBackground`
+
+#### Processes
+
+- Update current group photo background image
+- Re-merged previous photos
+
+#### Request [POST]
+
+```ts
+body: {
+	image: "base64_image_with_encoding_data";
+}
+```
+
+#### Response
+
+```ts
+STATUS 200
+NO BODY
+```
+
+<hr/>
 
 ### Upload Image - `http://localhost:3000/api/uploadFile`
 
@@ -201,3 +216,20 @@ body: {
 	status: "boolean",
 }
 ```
+
+# Other Notes (Docker is not usable)
+
+Although Dockerfile and compose.yaml is provided, this package cannot be packed as a docker image/container.
+
+- One of the library (`@imgly/background-removal-node`) is not executable in any docker image
+  - Including `node:20` and `node:20-alpine`
+- In `node:20-alpine`
+  - An error `__vsnprintf_chk: symbol not found` will be thrown
+  - Tried installed library `libc6-compat`, `glibc-2.34-r0`, `glibc-2.35-r1`, `gcompat`, `libstdc++`, `gcc`, `g++`, `musl-dev` and `build-base`
+  - Issue still not fixed, if you find any way to fix that, please leave a message
+- However, in `node:20`, where gnu version of linux with `glibc` is used
+  - An error `free() invalid size` is thrown by `@imgly/background-removal-node`
+  - Cause: `.wasm` is not read, and it is `{ }` when `free()` is called
+  - Same issue reported by others on the repo as well **_(By 13 April 2024)_**.
+    - [Issue 103: Ubuntu support](https://github.com/imgly/background-removal-js/issues/103)
+    - [Issue 106: Errors while removing background on deployed server](https://github.com/imgly/background-removal-js/issues/106)
