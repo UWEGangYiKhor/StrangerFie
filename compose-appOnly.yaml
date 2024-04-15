@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  app:
+    build: .
+    container_name: strangerfie
+    ports:
+      - 3000:3000
+    env_file: .env
+    environment:
+      - RAPID_API_KEY=$RAPID_API_KEY
+      - POSTGRES_PRISMA_URL=$POSTGRES_PRISMA_URL
+      - BG_REMOVE_METHOD=API
+    command: "node server.js HOSTNAME=0.0.0.0"

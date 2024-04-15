@@ -4,6 +4,7 @@ import localRemoveBgServices from "./localRemoveBgServices";
 import blurFacesServices from "./blurFacesServices";
 import { uploadFileResponses } from "@/responses/uploadFileResponses";
 import prisma from "@/utils/prismaClient";
+import removeBgServices from "./removeBgServices";
 
 export default async function uploadFileServices(
 	body: uploadFileDto
@@ -11,13 +12,15 @@ export default async function uploadFileServices(
 	if (!body?.image) {
 		throw new Error();
 	}
+	const removeBgFunc =
+		process.env.BG_REMOVE_METHOD === "local"
+			? localRemoveBgServices
+			: removeBgServices;
 
 	const imageBuffer = Buffer.from(body.image.split(",")[1], "base64");
 	const blurredImageBuffer = await blurFacesServices(imageBuffer);
-	const personImageBuffer = await localRemoveBgServices(imageBuffer);
-	const blurredPersonImageBuffer = await localRemoveBgServices(
-		blurredImageBuffer
-	);
+	const personImageBuffer = await removeBgFunc(imageBuffer);
+	const blurredPersonImageBuffer = await removeBgFunc(blurredImageBuffer);
 
 	const { id } = await prisma.images.create({
 		data: {

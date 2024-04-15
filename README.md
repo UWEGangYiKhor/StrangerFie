@@ -13,8 +13,15 @@ This is a prototype built for Interaction Design Coursework of BSc IT at UWE, Br
 
 ```bash
 NODE_ENV="production" # Set as development for dev server
+BG_REMOVE_METHOD="local" # If the app fails, try change this to "api"
 RAPID_API_KEY="YOUR_RAPID_API_KEY" # Get your API key on RapidAPI.com
 POSTGRES_PRISMA_URL="YOUR_POSTGRES_DB_URL"
+
+# If you are running docker compose, you may set a dedicated database
+POSTGRES_DB="strangerfie"
+POSTGRES_USER="postgres"
+POSTGRES_PASSWORD="root"
+POSTGRES_PORT="5431"
 ```
 
 Get your API Key on [RapidAPI.com](https://rapidapi.com/hub)
@@ -24,6 +31,12 @@ Get your API Key on [RapidAPI.com](https://rapidapi.com/hub)
 Register your account at RapidAPI and subscribe to the Face and Plate Blurer API at [Face and Plate Blurer](https://rapidapi.com/firdavscoder1/api/face-and-plate-blurer).
 <br/>
 There should be a free subscription version with 100 requests/month limit.
+
+## Subscribe to Background Removal API (Freemium)
+
+Register your account at RapidAPI and subscribe to the Background Removal API at [Background Removal](https://rapidapi.com/api4ai-api4ai-default/api/background-removal4).
+<br/>
+There should be a free subscription version with 25 requests/month limit. (**2 requests per photo**)
 
 ## How to Setup/Run
 
@@ -37,8 +50,16 @@ npx prisma generate
 npm run dev
 
 # For actual deployment server
+npm install
 npm run build
 npm run start
+
+# For docker, Docker need to be installed
+docker compose up # First set up
+docker compose -f compose-appOnly.yml up # If you are using cloud postgres database or your own postgres database
+
+docker compose start # Subsequent execution
+docker compose down --rmi local # Removing the images if not needed anymore
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -233,3 +254,9 @@ Although Dockerfile and compose.yaml is provided, this package cannot be packed 
   - Same issue reported by others on the repo as well **_(By 13 April 2024)_**.
     - [Issue 103: Ubuntu support](https://github.com/imgly/background-removal-js/issues/103)
     - [Issue 106: Errors while removing background on deployed server](https://github.com/imgly/background-removal-js/issues/106)
+
+## Updates
+
+Docker can be used now, by switching the `@imgly/background-removal-node` to API calls. However the API limits 25 requests per month (Which is 12 photos for this app only).
+
+`@imgly/background-removal-node` can still be used by specifying `BG_REMOVE_METHOD="local"` in the `.env` file. But, it may not be working on other computers.

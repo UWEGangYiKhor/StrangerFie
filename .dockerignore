@@ -1,6 +1,5 @@
 .git
 .next
-backup
 img
 node_modules
 .dockerignore
@@ -9,4 +8,5 @@ node_modules
 buildDocker.js
 Dockerfile
 README.md
-tmp_img.jpg
+next.config.mjs
+*.jpg

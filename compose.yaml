@@ -9,18 +9,12 @@ services:
     environment:
       - RAPID_API_KEY=$RAPID_API_KEY
       - POSTGRES_PRISMA_URL=$POSTGRES_PRISMA_URL
+      - BG_REMOVE_METHOD=API
     command: "node server.js HOSTNAME=0.0.0.0"
     extra_hosts:
       - "localhost:host-gateway"
     depends_on:
       - db
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
   db:
     image: postgres:15-alpine
     container_name: strangerfie_db
