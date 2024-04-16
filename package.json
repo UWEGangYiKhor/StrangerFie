@@ -9,7 +9,7 @@
 		"lint": "next lint"
 	},
 	"engines": {
-		"node": "20.11.0"
+		"node": ">=18.0.0"
 	},
 	"dependencies": {
 		"@imgly/background-removal-node": "^1.4.5",
