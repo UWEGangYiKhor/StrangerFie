@@ -11,6 +11,7 @@ export default async function isSetupServices(): Promise<isSetupResponses> {
 
 		return { status: haventPublishCount > 0 };
 	} catch (err) {
+		console.error(err);
 		throw err;
 	}
 }
