@@ -8,9 +8,6 @@
 		"start": "next start",
 		"lint": "next lint"
 	},
-	"engines": {
-		"node": "18.17.1"
-	},
 	"dependencies": {
 		"@prisma/client": "^5.12.1",
 		"axios": "^1.6.8",
