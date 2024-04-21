@@ -1,4 +1,4 @@
-import { BG_REMOVE_HOST, BG_REMOVE_URL } from "@/utils/constants";
+import { BG_REMOVE_HOST, BG_REMOVE_URL } from "../../../utils/constants";
 import axios from "axios";
 import fs from "fs";
 import FormData from "form-data";

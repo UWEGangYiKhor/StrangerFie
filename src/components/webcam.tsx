@@ -1,5 +1,5 @@
-import { useGet } from "@/hooks/useGet";
-import { publishImageResponses } from "@/responses/publishImageResponses";
+import { useGet } from "../hooks/useGet";
+import { publishImageResponses } from "../responses/publishImageResponses";
 import React, { useRef, useCallback } from "react";
 import Webcam from "react-webcam";
 

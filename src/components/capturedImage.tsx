@@ -1,6 +1,6 @@
-import { uploadFileDto } from "@/dto/uploadFileDto";
-import { usePost } from "@/hooks/usePost";
-import { uploadFileResponses } from "@/responses/uploadFileResponses";
+import { uploadFileDto } from "../dto/uploadFileDto";
+import { usePost } from "../hooks/usePost";
+import { uploadFileResponses } from "../responses/uploadFileResponses";
 import React, { useCallback, useState } from "react";
 import BackgroundCompleteDialog from "./backgroundComplete";
 

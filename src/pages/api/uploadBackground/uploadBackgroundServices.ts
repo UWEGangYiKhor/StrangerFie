@@ -1,6 +1,6 @@
-import { uploadFileDto } from "@/dto/uploadFileDto";
-import mergeImages from "@/utils/mergeImages";
-import prisma from "@/utils/prismaClient";
+import { uploadFileDto } from "../../../dto/uploadFileDto";
+import mergeImages from "../../../utils/mergeImages";
+import prisma from "../../../utils/prismaClient";
 
 export default async function uploadBackgroundServices(
 	body: uploadFileDto

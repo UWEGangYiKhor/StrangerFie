@@ -1,8 +1,8 @@
-import { uploadFileDto } from "@/dto/uploadFileDto";
+import { uploadFileDto } from "../../../dto/uploadFileDto";
 import mergeImages from "../../../utils/mergeImages";
 import blurFacesServices from "./blurFacesServices";
-import { uploadFileResponses } from "@/responses/uploadFileResponses";
-import prisma from "@/utils/prismaClient";
+import { uploadFileResponses } from "../../../responses/uploadFileResponses";
+import prisma from "../../../utils/prismaClient";
 import removeBgServices from "./removeBgServices";
 
 export default async function uploadFileServices(

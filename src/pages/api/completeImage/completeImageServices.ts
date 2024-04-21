@@ -1,7 +1,7 @@
 import mergeImages from "../../../utils/mergeImages";
-import { completeImageDto } from "@/dto/completeImageDto";
-import { completeImageResponses } from "@/responses/completeImageResponses";
-import prisma from "@/utils/prismaClient";
+import { completeImageDto } from "../../../dto/completeImageDto";
+import { completeImageResponses } from "../../../responses/completeImageResponses";
+import prisma from "../../../utils/prismaClient";
 
 async function completeImageServices(
 	body: completeImageDto

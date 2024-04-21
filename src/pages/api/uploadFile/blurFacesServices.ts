@@ -1,4 +1,4 @@
-import { BLUR_FACE_HOST, BLUR_FACE_URL } from "@/utils/constants";
+import { BLUR_FACE_HOST, BLUR_FACE_URL } from "../../../utils/constants";
 import axios from "axios";
 import fs from "fs";
 import FormData from "form-data";

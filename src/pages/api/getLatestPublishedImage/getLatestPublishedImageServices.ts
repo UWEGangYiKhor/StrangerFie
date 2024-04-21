@@ -1,5 +1,5 @@
-import { completeImageResponses } from "@/responses/completeImageResponses";
-import prisma from "@/utils/prismaClient";
+import { completeImageResponses } from "../../../responses/completeImageResponses";
+import prisma from "../../../utils/prismaClient";
 
 async function getLatestPublishedImageServices(): Promise<completeImageResponses> {
 	const { image } = await prisma.publish_image.findFirstOrThrow({

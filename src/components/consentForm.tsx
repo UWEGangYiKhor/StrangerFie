@@ -1,5 +1,5 @@
-import { completeImageDto } from "@/dto/completeImageDto";
-import { usePost } from "@/hooks/usePost";
+import { completeImageDto } from "../dto/completeImageDto";
+import { usePost } from "../hooks/usePost";
 import React, { useCallback } from "react";
 
 type PropType = {

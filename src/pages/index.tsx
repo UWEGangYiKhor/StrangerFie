@@ -1,17 +1,17 @@
-import "@/styles/styles.css";
+import "../styles/styles.css";
 import React, { useCallback, useEffect, useState } from "react";
-import CapturedImage from "@/components/capturedImage";
-import CompletedImage from "@/components/completedImage";
-import ConsentForm from "@/components/consentForm";
-import Loader from "@/components/loader";
-import ProcessedImage from "@/components/processedImage";
-import QRCode from "@/components/qrCode";
-import WebCam from "@/components/webcam";
-import { uploadFileResponses } from "@/responses/uploadFileResponses";
+import CapturedImage from "../components/capturedImage";
+import CompletedImage from "../components/completedImage";
+import ConsentForm from "../components/consentForm";
+import Loader from "../components/loader";
+import ProcessedImage from "../components/processedImage";
+import QRCode from "../components/qrCode";
+import WebCam from "../components/webcam";
+import { uploadFileResponses } from "../responses/uploadFileResponses";
 import Head from "next/head";
-import { useGet } from "@/hooks/useGet";
-import { isSetupResponses } from "@/responses/isSetupResponses";
-import { hasPublishedImageResponses } from "@/responses/hasPublishedImageResponses";
+import { useGet } from "../hooks/useGet";
+import { isSetupResponses } from "../responses/isSetupResponses";
+import { hasPublishedImageResponses } from "../responses/hasPublishedImageResponses";
 
 export default function StrangerFie() {
 	const [imageData, setImageData] = useState<string>();

@@ -1,5 +1,5 @@
-import { useGet } from "@/hooks/useGet";
-import { publishImageResponses } from "@/responses/publishImageResponses";
+import { useGet } from "../hooks/useGet";
+import { publishImageResponses } from "../responses/publishImageResponses";
 import React, { useCallback } from "react";
 
 type PropType = {
