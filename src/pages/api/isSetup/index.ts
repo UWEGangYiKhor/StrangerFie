@@ -10,7 +10,6 @@ async function publishImageHandler(req: NextApiRequest, res: NextApiResponse) {
 			if (process.env.NODE_ENV === "development") {
 				console.error(err);
 			}
-			console.error(err);
 			res.status(200).json({ err });
 		}
 	} else {
