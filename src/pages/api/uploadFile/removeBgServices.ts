@@ -7,7 +7,8 @@ export default async function removeBgServices(
 	imageBuffer: Buffer
 ): Promise<Buffer> {
 	const data = new FormData();
-	const tmpFilePath = "./tmp_img1.jpg";
+	const tmpFilePath =
+		process.env.PLATFORM === "server" ? "/tmp/img2.jpg" : "./tmp_img2.jpg";
 	fs.writeFileSync(tmpFilePath, imageBuffer);
 	data.append("image", fs.createReadStream(tmpFilePath));
 

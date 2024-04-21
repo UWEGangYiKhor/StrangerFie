@@ -7,7 +7,8 @@ export default async function blurFacesServices(
 	imageBuffer: Buffer
 ): Promise<Buffer> {
 	const data = new FormData();
-	const tmpFilePath = "./tmp_img.jpg";
+	const tmpFilePath =
+		process.env.PLATFORM === "server" ? "/tmp/img1.jpg" : "./tmp_img1.jpg";
 	fs.writeFileSync(tmpFilePath, imageBuffer);
 	data.append("image", fs.createReadStream(tmpFilePath));
 
