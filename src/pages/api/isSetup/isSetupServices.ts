@@ -2,11 +2,17 @@ import { isSetupResponses } from "../../../responses/isSetupResponses";
 import prisma from "../../../utils/prismaClient";
 
 export default async function isSetupServices(): Promise<isSetupResponses> {
-	const haventPublishCount = await prisma.publish_image.count({
-		where: {
-			archived: false,
-		},
-	});
+	try {
+		const haventPublishCount = await prisma.publish_image.count({
+			where: {
+				archived: false,
+			},
+		});
 
-	return { status: haventPublishCount > 0 };
+		await prisma.$disconnect();
+		return { status: haventPublishCount > 0 };
+	} catch (err) {
+		await prisma.$disconnect();
+		throw err;
+	}
 }

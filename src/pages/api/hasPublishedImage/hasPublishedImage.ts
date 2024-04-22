@@ -2,11 +2,17 @@ import { hasPublishedImageResponses } from "../../../responses/hasPublishedImage
 import prisma from "../../../utils/prismaClient";
 
 export default async function hasPublishedImage(): Promise<hasPublishedImageResponses> {
-	const publishCount = await prisma.publish_image.count({
-		where: {
-			archived: true,
-		},
-	});
+	try {
+		const publishCount = await prisma.publish_image.count({
+			where: {
+				archived: true,
+			},
+		});
 
-	return { status: publishCount > 0 };
+		await prisma.$disconnect();
+		return { status: publishCount > 0 };
+	} catch (err) {
+		await prisma.$disconnect();
+		throw err;
+	}
 }
