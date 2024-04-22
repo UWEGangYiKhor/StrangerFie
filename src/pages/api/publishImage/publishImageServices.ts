@@ -1,8 +1,9 @@
 import mergeImages from "../../../utils/mergeImages";
 import { publishImageResponses } from "../../../responses/publishImageResponses";
-import prisma from "../../../utils/prismaClient";
+import { prismaClientSingleton } from "../../../utils/prismaClient";
 
 export default async function publishImageServices(): Promise<publishImageResponses> {
+	const prisma = prismaClientSingleton();
 	try {
 		const allImages = await prisma.images.findMany({
 			select: {
