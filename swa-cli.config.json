@@ -1,0 +1,19 @@
+{
+	"$schema": "https://aka.ms/azure/static-web-apps-cli/schema",
+	"data-source": {
+		"database-type": "postgresql",
+		"options": {
+			"set-session-context": false
+		},
+		"connection-string": "@env('POSTGRES_PRISMA_URL')"
+	},
+	"configurations": {
+		"strangerfie": {
+			"appLocation": ".",
+			"outputLocation": ".next",
+			"appBuildCommand": "npm run build",
+			"run": "npm run dev",
+			"appDevserverUrl": "http://localhost:3000"
+		}
+	}
+}
