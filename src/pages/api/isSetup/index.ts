@@ -1,6 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import isSetupServices from "./isSetupServices";
 
+export const dynamic = "force-dynamic";
+
 async function publishImageHandler(req: NextApiRequest, res: NextApiResponse) {
 	if (req.method === "GET") {
 		try {
