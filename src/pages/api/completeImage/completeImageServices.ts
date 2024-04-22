@@ -1,17 +1,16 @@
 import mergeImages from "../../../utils/mergeImages";
 import { completeImageDto } from "../../../dto/completeImageDto";
 import { completeImageResponses } from "../../../responses/completeImageResponses";
-import { prismaClientSingleton } from "../../../utils/prismaClient";
+import prisma from "../../../utils/prismaClient";
 
 async function completeImageServices(
 	body: completeImageDto
 ): Promise<completeImageResponses> {
-	if (!body?.id) {
-		throw new Error();
-	}
-
-	const prisma = prismaClientSingleton();
 	try {
+		if (!body?.id) {
+			throw new Error();
+		}
+
 		const { blurred_person_image_blob: curPersonImage } =
 			await prisma.images.findFirstOrThrow({
 				select: {

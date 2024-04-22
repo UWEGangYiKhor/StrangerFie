@@ -1,8 +1,7 @@
 import { completeImageResponses } from "../../../responses/completeImageResponses";
-import { prismaClientSingleton } from "../../../utils/prismaClient";
+import prisma from "../../../utils/prismaClient";
 
 async function getLatestPublishedImageServices(): Promise<completeImageResponses> {
-	const prisma = prismaClientSingleton();
 	try {
 		const { image } = await prisma.publish_image.findFirstOrThrow({
 			select: {

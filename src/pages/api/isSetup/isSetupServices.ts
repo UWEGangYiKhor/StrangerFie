@@ -1,8 +1,7 @@
 import { isSetupResponses } from "../../../responses/isSetupResponses";
-import { prismaClientSingleton } from "../../../utils/prismaClient";
+import prisma from "../../../utils/prismaClient";
 
 export default async function isSetupServices(): Promise<isSetupResponses> {
-	const prisma = prismaClientSingleton();
 	try {
 		const haventPublishCount = await prisma.publish_image.count({
 			where: {

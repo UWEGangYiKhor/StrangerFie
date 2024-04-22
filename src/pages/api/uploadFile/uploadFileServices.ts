@@ -2,18 +2,17 @@ import { uploadFileDto } from "../../../dto/uploadFileDto";
 import mergeImages from "../../../utils/mergeImages";
 import blurFacesServices from "./blurFacesServices";
 import { uploadFileResponses } from "../../../responses/uploadFileResponses";
-import { prismaClientSingleton } from "../../../utils/prismaClient";
+import prisma from "../../../utils/prismaClient";
 import removeBgServices from "./removeBgServices";
 
 export default async function uploadFileServices(
 	body: uploadFileDto
 ): Promise<uploadFileResponses> {
-	if (!body?.image) {
-		throw new Error();
-	}
-
-	const prisma = prismaClientSingleton();
 	try {
+		if (!body?.image) {
+			throw new Error();
+		}
+
 		const imageBuffer = Buffer.from(body.image.split(",")[1], "base64");
 		const blurredImageBuffer = await blurFacesServices(imageBuffer);
 		const personImageBuffer = await removeBgServices(imageBuffer);

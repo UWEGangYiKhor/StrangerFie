@@ -1,16 +1,15 @@
 import { uploadFileDto } from "../../../dto/uploadFileDto";
 import mergeImages from "../../../utils/mergeImages";
-import { prismaClientSingleton } from "../../../utils/prismaClient";
+import prisma from "../../../utils/prismaClient";
 
 export default async function uploadBackgroundServices(
 	body: uploadFileDto
 ): Promise<void> {
-	if (!body?.image) {
-		throw new Error();
-	}
-
-	const prisma = prismaClientSingleton();
 	try {
+		if (!body?.image) {
+			throw new Error();
+		}
+
 		const imageBuffer = Buffer.from(body.image.split(",")[1], "base64");
 		const existingId = await prisma.publish_image.findFirst({
 			select: {

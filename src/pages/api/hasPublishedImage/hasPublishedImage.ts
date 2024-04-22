@@ -1,8 +1,7 @@
 import { hasPublishedImageResponses } from "../../../responses/hasPublishedImageResponses";
-import { prismaClientSingleton } from "../../../utils/prismaClient";
+import prisma from "../../../utils/prismaClient";
 
 export default async function hasPublishedImage(): Promise<hasPublishedImageResponses> {
-	const prisma = prismaClientSingleton();
 	try {
 		const publishCount = await prisma.publish_image.count({
 			where: {
